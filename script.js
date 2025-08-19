@@ -7,10 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const timestampBtn = document.getElementById('timestamp-btn');
     const scratchPad = document.getElementById('scratch-pad');
     const exportTxtBtn = document.getElementById('export-txt-btn');
+    const clearPadBtn = document.getElementById('clear-pad-btn');
+    const togglePositionBtn = document.getElementById('toggle-position-btn');
+    const panelControlsModule = document.querySelector('.panel-controls-module');
+    const currentTimeDisplay = document.getElementById('current-time');
+    const currentDateDisplay = document.getElementById('current-date');
 
     let timer;
     let elapsedTime = 0;
     let isRunning = false;
+
+    // Check if we're in popup mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const isPopupMode = urlParams.get('mode') === 'panel';
+    
+    // Configure UI based on mode
+    if (isPopupMode) {
+        producerPanel.style.width = '100%';
+        handle.style.display = 'none';
+    } else {
+        // Hide panel controls in regular browser mode
+        if (panelControlsModule) {
+            panelControlsModule.style.display = 'none';
+        }
+    }
 
     // --- Resizable Panel ---
     let isResizing = false;
@@ -87,6 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
         scratchPad.focus();
         scratchPad.selectionStart = scratchPad.selectionEnd = cursorPos + timestamp.length;
         saveScratchPad();
+        
+        // Visual feedback
+        timestampBtn.classList.add('clicked');
+        timestampBtn.textContent = '✓ Added';
+        setTimeout(() => {
+            timestampBtn.classList.remove('clicked');
+            timestampBtn.textContent = 'Timestamp';
+        }, 300);
     });
 
     // --- Scratch Pad ---
@@ -96,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scratchPad.addEventListener('input', saveScratchPad);
 
-    // --- Export ---
+    // --- Export & Clear ---
     exportTxtBtn.addEventListener('click', () => {
         const text = scratchPad.value;
         const blob = new Blob([text], { type: 'text/plain' });
@@ -106,6 +134,68 @@ document.addEventListener('DOMContentLoaded', () => {
         anchor.click();
         window.URL.revokeObjectURL(anchor.href);
     });
+
+    clearPadBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all notes?')) {
+            scratchPad.value = '';
+            saveScratchPad();
+        }
+    });
+
+    // --- Panel Controls ---
+    togglePositionBtn.addEventListener('click', () => {
+        if (isPopupMode) {
+            // In popup mode, move the window to the other side of the screen
+            const currentX = window.screenX;
+            const screenWidth = window.screen.availWidth;
+            const windowWidth = window.outerWidth;
+            
+            if (currentX < screenWidth / 2) {
+                // Currently on left, move to right
+                window.moveTo(screenWidth - windowWidth, 0);
+            } else {
+                // Currently on right, move to left
+                window.moveTo(0, 0);
+            }
+        } else {
+            // Regular mode - toggle sidebar position
+            if (producerPanel.classList.contains('left')) {
+                producerPanel.classList.remove('left');
+                producerPanel.classList.add('right');
+                localStorage.setItem('dcpn-panel-position', 'right');
+            } else {
+                producerPanel.classList.remove('right');
+                producerPanel.classList.add('left');
+                localStorage.setItem('dcpn-panel-position', 'left');
+            }
+        }
+    });
+
+
+    // --- Current Time and Date Display ---
+    function updateCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        
+        if (currentTimeDisplay) {
+            currentTimeDisplay.textContent = `${displayHours}:${minutes} ${ampm}`;
+        }
+        
+        if (currentDateDisplay) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = months[now.getMonth()];
+            const day = now.getDate();
+            const year = now.getFullYear();
+            currentDateDisplay.textContent = `${month} ${day}, ${year}`;
+        }
+    }
+
+    // Update current time every second
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
 
     // --- Load from localStorage ---
     function loadState() {

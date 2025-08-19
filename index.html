@@ -3,51 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCPN Producer</title>
-    <link rel="stylesheet" href="style.css">
+    <title>DCPN Producer - Podcast Production Tool</title>
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-    <div id="producer-panel" class="sidebar left">
-        <div class="handle"></div>
-        <div class="panel-content">
-            <div class="module-container">
-                <!-- Clock / Timer Module -->
-                <div class="module">
-                    <h2 class="module-title">Clock</h2>
-                    <div id="clock" class="clock-display">00:00:00</div>
-                    <div class="button-group">
-                        <button id="start-pause-btn">Start</button>
-                        <button id="reset-btn">Reset</button>
+    <div class="landing-container">
+        <div class="content">
+            <img src="::claude-look-here/DCPN LOGO white.png" alt="DCPN" class="logo-main">
+            
+            <h1>Producer's Notepad</h1>
+            
+            <div class="description">
+                <p>A professional tool designed for podcast producers to capture notes and timestamps during live recording sessions.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <span class="icon">⏱️</span>
+                        <h3>Timer & Timestamps</h3>
+                        <p>Track episode time and insert timestamps directly into your notes</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <span class="icon">📝</span>
+                        <h3>Real-time Notes</h3>
+                        <p>Capture thoughts, segments, and production notes as they happen</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <span class="icon">💾</span>
+                        <h3>Auto-save & Export</h3>
+                        <p>Notes are automatically saved and can be exported as text files</p>
                     </div>
                 </div>
-
-                <!-- Timestamp Logger Module -->
-                <div class="module">
-                    <h2 class="module-title">Timestamp Logger</h2>
-                    <button id="timestamp-btn">Timestamp</button>
-                </div>
-
-                <!-- Scratch Pad Module -->
-                <div class="module">
-                    <h2 class="module-title">Scratch Pad</h2>
-                    <textarea id="scratch-pad" placeholder="Take notes here..."></textarea>
-                </div>
-
-                <!-- Export Module -->
-                <div class="module">
-                    <h2 class="module-title">Export</h2>
-                    <button id="export-txt-btn">Download Notes (.txt)</button>
-                </div>
-
-                <!-- Panel Position Module -->
-                <div class="module">
-                    <h2 class="module-title">Position</h2>
-                    <button id="toggle-position-btn">Toggle Position</button>
-                </div>
             </div>
+            
+            <button id="launch-producer" class="launch-button">
+                Launch Producer Panel
+            </button>
+            
+            <p class="note">Once the producer panel opens, you can close this page.</p>
         </div>
     </div>
-
-    <script src="script.js"></script>
+    
+    <script>
+        document.getElementById('launch-producer').addEventListener('click', () => {
+            const width = 400;
+            const height = window.screen.availHeight;
+            const left = 0;
+            const top = 0;
+            
+            window.open(
+                'producer.html?mode=panel',
+                'DCPNProducerPanel',
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
+            
+            // Show close message
+            setTimeout(() => {
+                document.querySelector('.note').innerHTML = '<strong>Producer panel is now open!</strong> You can close this page.';
+                document.querySelector('.note').style.color = '#00ff00';
+            }, 500);
+        });
+    </script>
 </body>
 </html>

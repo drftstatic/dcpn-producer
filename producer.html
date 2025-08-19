@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCPN Producer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="producer-panel" class="sidebar left">
+        <div class="handle"></div>
+        <div class="panel-content">
+            <div class="panel-header">
+                <img src="::claude-look-here/DCPN LOGO white.png" alt="DCPN Logo" class="logo">
+            </div>
+            <div class="module-container">
+                <!-- Clock / Timer Module -->
+                <div class="module">
+                    <div id="clock" class="clock-display">00:00:00</div>
+                    <div class="button-group">
+                        <button id="start-pause-btn">Start</button>
+                        <button id="reset-btn">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Timestamp Logger Module -->
+                <div class="module">
+                    <button id="timestamp-btn">Timestamp</button>
+                </div>
+
+                <!-- Scratch Pad Module -->
+                <div class="module">
+                    <textarea id="scratch-pad" placeholder="Take notes here..."></textarea>
+                    <div class="button-group">
+                        <button id="clear-pad-btn" class="icon-btn" title="Clear Notes">
+                            <span>🗑️</span>
+                        </button>
+                        <button id="export-txt-btn" class="icon-btn" title="Download Notes">
+                            <span>💾</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Footer with current time and swap button -->
+        <div class="panel-footer">
+            <div class="current-time" id="current-time">12:00 PM</div>
+            <button id="toggle-position-btn" class="swap-btn" title="Move to Other Side">
+                ⇄
+            </button>
+            <div class="current-date" id="current-date">Jan 1, 2024</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
